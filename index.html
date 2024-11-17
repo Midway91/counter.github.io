@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Daily Counter</title>
+  <style>
+    .counter-container {
+      text-align: center;
+      margin-top: 50px;
+    }
+
+    #counter {
+      font-size: 36px;
+    }
+
+    #reset-button {
+      padding: 10px 20px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <div class="counter-container">
+    <p id="counter">0</p>
+    <button id="reset-button">Reset</button>
+  </div>
+  <script>
+    const counterElement = document.getElementById('counter');
+    const resetButton = document.getElementById('reset-button');
+
+    // Get the current count from local storage or initialize it to 0
+    let count = localStorage.getItem('count') || 0;
+    counterElement.textContent = count;
+
+    // Update the count every day at midnight
+    const updateCount = () => {
+      const now = new Date();
+      const midnight = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1);
+      const timeDiff = midnight - now;
+      setTimeout(updateCount, timeDiff);
+
+      count++;
+      counterElement.textContent = count;
+      localStorage.setItem('count', count);
+    };
+
+    updateCount();
+
+    // Reset the count on button click
+    resetButton.addEventListener('click', () => {
+      count = 0;
+      counterElement.textContent = count;
+      localStorage.setItem('count', count);
+    });
+  </script>
+</body>
+</html>
