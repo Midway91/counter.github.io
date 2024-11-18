@@ -31,22 +31,27 @@
     const counterElement = document.getElementById('counter');
     const resetButton = document.getElementById('reset-button');
 
-    // Get the current count from local storage or initialize it to 0
-    let count = localStorage.getItem('count') || 0;
+    // Get the current count and last update date from localStorage
+    let count = parseInt(localStorage.getItem('count')) || 0;
+    let lastUpdateDate = localStorage.getItem('lastUpdateDate');
+
+    // Set the current count on the page
     counterElement.textContent = count;
 
-    // Update the count every day at midnight
+    // Function to check if it's a new day and update the count
     const updateCount = () => {
-      const now = new Date();
-      const midnight = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1);
-      const timeDiff = midnight - now;
-      setTimeout(updateCount, timeDiff);
+      const today = new Date().toISOString().split('T')[0]; // Get today's date in YYYY-MM-DD format
 
-      count++;
-      counterElement.textContent = count;
-      localStorage.setItem('count', count);
+      // If it's a new day, update the count
+      if (lastUpdateDate !== today) {
+        count++;
+        counterElement.textContent = count;
+        localStorage.setItem('count', count);
+        localStorage.setItem('lastUpdateDate', today); // Store today's date
+      }
     };
 
+    // Call updateCount to check if the count needs to be updated
     updateCount();
 
     // Reset the count on button click
@@ -54,6 +59,7 @@
       count = 0;
       counterElement.textContent = count;
       localStorage.setItem('count', count);
+      localStorage.setItem('lastUpdateDate', new Date().toISOString().split('T')[0]); // Reset the last update date
     });
   </script>
 </body>
